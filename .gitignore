@@ -1,0 +1,10 @@
+# IGNORE SCRIPTS
+.venv
+
+# IGNORE FOLDERS
+/data/
+/notebooks/
+/configs/
+
+# IGNORE FILES
+test.ipynb
