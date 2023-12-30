@@ -16,14 +16,15 @@ subsets = [df.iloc[i * subset_size: (i + 1) * subset_size]
 def call_data():
     return df
 
-def get_recommendations_subset(song_index, cosine_sim_matrix, num_recommendations=5):
+
+def get_recommendations_subset(song_index, cosine_sim_matrix, num_recommendations):
     sim_scores = list(enumerate(cosine_sim_matrix[song_index]))
     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
     song_indices = [i[0] for i in sim_scores[1:num_recommendations+1]]
     return song_indices
 
 
-def generate_playlist(input_song):
+def generate_playlist(input_song, num_recommendations):
     features = df.drop(
         ['id', 'name', 'artists', 'id_artists', 'release_date', 'duration_ms', 'time_signature'], axis=1)
     features = features.sort_index(axis='columns')
@@ -50,7 +51,7 @@ def generate_playlist(input_song):
         user_cosine_sim_subset = cosine_similarity(
             user_scaled_features, scaled_features)
         user_recommendations_subset = get_recommendations_subset(
-            0, user_cosine_sim_subset)
+            0, user_cosine_sim_subset, num_recommendations=5)
         # print(user_recommendations_subset)
 
         recommendations.append(subset.iloc[user_recommendations_subset])
@@ -64,7 +65,7 @@ def generate_playlist(input_song):
     final_user_cosine_sim_subset = cosine_similarity(
         user_scaled_features, final_scaled_features)
     final_user_recommendations_subset = get_recommendations_subset(
-        0, final_user_cosine_sim_subset)
+        0, final_user_cosine_sim_subset, num_recommendations)
 
     output_playlist = final_df.iloc[final_user_recommendations_subset]
 
