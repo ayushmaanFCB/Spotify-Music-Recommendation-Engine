@@ -1,6 +1,6 @@
-import spotipy
-from spotipy.oauth2 import SpotifyOAuth
-import configparser
+# import spotipy
+# from spotipy.oauth2 import SpotifyOAuth
+# import configparser
 from pprint import pprint
 
 
@@ -22,18 +22,18 @@ def structure_song(track_details, audio_details):
     return song_data
 
 
-config = configparser.ConfigParser()
-config.read('./configs/config.cfg')
+# config = configparser.ConfigParser()
+# config.read('./configs/config.cfg')
 
-SPOTIPY_CLIENT_ID = config.get('SPOTIFY', 'SPOTIPY_CLIENT_ID')
-SPOTIPY_CLIENT_SECRET = config.get('SPOTIFY', 'SPOTIPY_CLIENT_SECRET')
-SPOTIPY_REDIRECT_URI = config.get('SPOTIFY', 'SPOTIPY_REDIRECT_URI')
+# SPOTIPY_CLIENT_ID = config.get('SPOTIFY', 'SPOTIPY_CLIENT_ID')
+# SPOTIPY_CLIENT_SECRET = config.get('SPOTIFY', 'SPOTIPY_CLIENT_SECRET')
+# SPOTIPY_REDIRECT_URI = config.get('SPOTIFY', 'SPOTIPY_REDIRECT_URI')
 
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
-    SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET, SPOTIPY_REDIRECT_URI, scope='user-library-read'))
+# sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
+#     SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET, SPOTIPY_REDIRECT_URI, scope='user-library-read'))
 
 
-def fetch_track_info(id):
+def fetch_track_info(sp, id):
     track_uri = 'spotify:track:'+id
     track_details = sp.track(track_uri)
     audio_details = sp.audio_features(track_uri)[0]
@@ -41,9 +41,17 @@ def fetch_track_info(id):
     return song
 
 
-def apply_cover_images(df):
+def apply_cover_images(sp, df):
     for index, row in df.iterrows():
         track_details = sp.track(row['id'])
         cover_image_url = track_details['album']['images'][0]['url']
         df.at[index, 'album_cover'] = cover_image_url
+    return df
+
+
+def apply_preview_url(sp, df):
+    for index, row in df.iterrows():
+        track_details = sp.track(row['id'])
+        preview_url = track_details['preview_url']
+        df.at[index, 'preview_url'] = preview_url
     return df
