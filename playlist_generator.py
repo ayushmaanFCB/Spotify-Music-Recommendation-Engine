@@ -14,7 +14,17 @@ subsets = [df.iloc[i * subset_size: (i + 1) * subset_size]
 
 
 def call_data():
-    return df
+    global df
+    global subsets
+    df = pd.read_csv("./data/tracks.csv")
+    df = df.sample(frac=1).reset_index(drop=True)
+
+    total_records = len(df)
+    subset_size = 10000
+    num_subsets = total_records // subset_size
+    subsets = [df.iloc[i * subset_size: (i + 1) * subset_size]
+               for i in range(num_subsets)]
+    return df, subsets
 
 
 def get_recommendations_subset(song_index, cosine_sim_matrix, num_recommendations):
@@ -24,7 +34,16 @@ def get_recommendations_subset(song_index, cosine_sim_matrix, num_recommendation
     return song_indices
 
 
-def generate_playlist(input_song, num_recommendations):
+def generate_playlist(input_song, num_recommendations, explicit):
+    global df
+    global subsets
+    if not explicit:
+        df = df[df['explicit'] != 1]
+    else:
+        df, subsets = call_data()
+
+    print(df['explicit'].value_counts())
+
     features = df.drop(
         ['id', 'name', 'artists', 'id_artists', 'release_date', 'duration_ms', 'time_signature'], axis=1)
     features = features.sort_index(axis='columns')

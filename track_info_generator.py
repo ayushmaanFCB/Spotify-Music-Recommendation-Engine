@@ -63,4 +63,9 @@ def convert_msTo_min(milliseconds):
     minutes = int(total_seconds // 60)
     seconds = int(total_seconds % 60)
 
-    return f"{minutes}:{seconds}"
+    return f"{minutes} minutes {seconds} seconds"
+
+
+def generate_additional_info(sp, track_id):
+    track_details = sp.track(track_id)
+    return track_details['album']['images'][0]['url'], track_details['preview_url']

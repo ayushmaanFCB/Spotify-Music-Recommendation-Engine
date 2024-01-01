@@ -10,7 +10,7 @@ import time
 
 init(autoreset=True)
 
-# st.set_page_config(layout='wide')
+st.set_page_config(layout='wide')
 
 try:
     config = configparser.ConfigParser()
@@ -26,9 +26,12 @@ except Exception as e:
     print(f"\n{Fore.RED}Failed to connect to Spotify API, check credentials...")
 
 
-st.title("SPOTIFY RECOMMENDATION ENGINE")
+st.markdown(
+    "<h1 style='text-align:center; color:#1cbc55'>SPOTIFY RECOMMENDATION ENGINE</h1>", unsafe_allow_html=True)
 
-search_query = st.text_input("SEARCH FOR SONG")
+c1, c2, c3 = st.columns([1, 1, 1])
+with c2:
+    search_query = st.text_input("SEARCH FOR SONG")
 
 
 if search_query:
@@ -40,7 +43,7 @@ if search_query:
         display_suggestions.append(
             result['name'] + " - " + result['artists'][0]['name'])
 
-    col1, col2, col3 = st.columns([2.5, 1, 1])
+    col1, col2, col3, col4 = st.columns([3, 2, 2, 1])
     with col1:
         selected_song_index = st.selectbox("AVAILABLE SONGS", range(
             len(suggestions)), format_func=lambda x: display_suggestions[x])
@@ -48,53 +51,79 @@ if search_query:
         number_of_songs = int(st.number_input(
             "NUMBER OF SONGS", min_value=3, max_value=10))
     with col3:
-        search_but = st.button("GENERATE PLAYLIST")
+        st.write("Restrict inappropriate tracks")
+        explicit = st.toggle(label="Allow Explicit", value=True)
+    with col4:
+        search_but = st.button("GENERATE PLAYLIST", use_container_width=True)
+
+    m_col1, m_col2 = st.columns([2, 1], gap='large')
 
     if search_but:
-        selected_track = results['tracks']['items'][selected_song_index]
-        track_id = selected_track['id']
+        with m_col1:
+            selected_track = results['tracks']['items'][selected_song_index]
+            track_id = selected_track['id']
 
-        song = track_info_generator.fetch_track_info(sp, track_id)
-        recommendations = playlist_generator.generate_playlist(
-            [song], number_of_songs)
-        recommendations = track_info_generator.apply_cover_images(
-            sp, recommendations)
-        recommendations = track_info_generator.apply_preview_url(
-            sp, recommendations)
-        recommendations = recommendations[[
-            'name', 'artists', 'release_date', 'explicit', 'duration_ms', 'album_cover', 'preview_url']]
+            song = track_info_generator.fetch_track_info(sp, track_id)
+            recommendations = playlist_generator.generate_playlist(
+                [song], number_of_songs, explicit)
+            recommendations = track_info_generator.apply_cover_images(
+                sp, recommendations)
+            recommendations = track_info_generator.apply_preview_url(
+                sp, recommendations)
+            recommendations = recommendations[[
+                'name', 'artists', 'release_date', 'explicit', 'duration_ms', 'album_cover', 'preview_url']]
 
-        print(f"\n{Fore.CYAN}{recommendations}\n")
+            print(f"\n{Fore.CYAN}{recommendations}\n")
 
-        st.markdown(
-            "<h2 style='text-align:center'>Recommended Songs  </h2>", unsafe_allow_html=True)
+            st.markdown(
+                "<h3 style='text-align:center; color:#1cbc55'>RECOMMENDATIONS</h3>", unsafe_allow_html=True)
 
-        for index, row in recommendations.iterrows():
-            artists = ast.literal_eval(row['artists'])
-            artists = ', '.join(list(artists))
-            duration = track_info_generator.convert_msTo_min(
-                row['duration_ms'])
-            song_card = """
-                <div style="background-color: #121313; padding:15px; overflow:hidden; margin-bottom:20px">
-                    <div style='display: inline-block; margin-right: 30px;'>
-                            <h5>{1}</h5>
-                            <h6>{2}</h6>
-                            <p>Released On : {4}</p>
-                            <audio controls>
-                                <source src="{3}" type="audio/mp3">
-                            </audio>
+            for index, row in recommendations.iterrows():
+                artists = ast.literal_eval(row['artists'])
+                artists = ', '.join(list(artists))
+                duration = track_info_generator.convert_msTo_min(
+                    row['duration_ms'])
+                song_card = """
+                    <div style="background-color: #121313; padding:30px; overflow:hidden; margin-bottom:20px; border-radius: 30px;">
+                        <div style='display: inline-block; margin-right: 30px;'>
+                                <h5 style='color:#1cbc55'>{1}</h5>
+                                <h6>{2}</h6>
+                                <p>Release Date : {4}</p>
+                                <p>Duration : {5}</p>
+                                <audio controls>
+                                    <source src="{3}" type="audio/mp3">
+                                </audio>
+                        </div>
+                        <div style='float:right'>
+                            <img src='{0}' height='150px' >
+                """.format(row['album_cover'], row['name'], artists, row['preview_url'], row['release_date'], duration)
+                if row['explicit'] == 0:
+                    song_card = song_card + "</div></div>"
+                else:
+                    song_card = song_card + "<br><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAABEUlEQVR4nO2WQWoCQRBFeym5QNQuRzyD69zATbA/uAu4MHogF1noIQSzqUIvkOQCOmeJlKARnBmTocYJjh9q1fBfz+9m+jtXabXXL7UWY+IFUxK8WYx6NQVj9U6FkuDLMzZewswOHGaew1a9E+G6K4U2Fr0H6yTVU+FewuvZokaiu7OGHv0Zc2WcLRyiKQpMaf5Z4PYadWK8e8bHpSHBsxmYGEMSfP9mPGNkBvaM0Yl55i1uSf+pELDLKbqD/xp1tEI3adwFkcHlSpzbBUdlRe1yiu7gf/3LpLIeiY4MHonD8urPooUozb+06tPcl72wLazsCeLE8/+pt/s2aFtvBTFx+Mzs1lpBrQu9fmkqtDLaARzjPmj2d5gbAAAAAElFTkSuQmCC' style='margin-top: 25px; float:right'></div></div>"
+
+                with st.expander(row['name']+" - "+artists):
+                    st.write(song_card, unsafe_allow_html=True)
+
+                time.sleep(0.75)
+
+        with m_col2:
+            st.markdown(
+                f"""<h3 style='text-align:center; color:#1cbc55'>SONG INFO</h3>
+                    <div style="background-color: #121313; padding:30px; overflow:hidden; margin-bottom:20px; text-align:center; border-radius: 50px;">
+                        <img src='{track_info_generator.generate_additional_info(sp, track_id)[0]}' height=150px>
+                        <h5 style='color:#1cbc55; margin-top:10px'>{song['name']}</h5>
+                        <h6>{', '.join(list(song['artists']))}</h6>
+                        <p>Release Date : {song['release_date']}</p>
+                        <p>Duration : {track_info_generator.convert_msTo_min(song['duration_ms'])}</p>
+                        <audio controls>
+                            <source src="{track_info_generator.generate_additional_info(sp, track_id)[1]}" type="audio/mp3">
+                        </audio>
                     </div>
-                    <div style='display: inline-block; vertical-align: top;'>
-                        <p>Duration - {5}</p>
-                    </div>
-                    <img src='{0}' height=150px' style='float:right'>
-                </div>
-            """.format(row['album_cover'], row['name'], artists, row['preview_url'], row['release_date'], duration)
+                """, unsafe_allow_html=True)
 
-            with st.expander(row['name']+" - "+artists):
-                st.write(song_card, unsafe_allow_html=True)
-
-            time.sleep(0.75)
 else:
-    st.success(
-        "Enter a search query to get suggestions. A list of available options will be shown.")
+    c1, c2, c3 = st.columns([1, 1, 1])
+    with c2:
+        st.success(
+            "Enter a search query to get suggestions. A list of available options will be shown.")
