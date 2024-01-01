@@ -28,20 +28,29 @@ except Exception as e:
 
 st.title("SPOTIFY RECOMMENDATION ENGINE")
 
-search_query = st.text_input("ENTER ANY SONG NAME")
+search_query = st.text_input("SEARCH FOR SONG")
 
 
 if search_query:
 
     results = sp.search(q=search_query, type='track', limit=5)
     suggestions = [track['name'] for track in results['tracks']['items']]
-    selected_song_index = st.selectbox("AVAILABLE SONGS", range(
-        len(suggestions)), format_func=lambda x: suggestions[x])
+    display_suggestions = []
+    for result in results['tracks']['items']:
+        display_suggestions.append(
+            result['name'] + " - " + result['artists'][0]['name'])
 
-    number_of_songs = int(st.number_input(
-        "NUMBER OF SONGS YOU WANT TO GENERATE", min_value=3, max_value=10))
+    col1, col2, col3 = st.columns([2.5, 1, 1])
+    with col1:
+        selected_song_index = st.selectbox("AVAILABLE SONGS", range(
+            len(suggestions)), format_func=lambda x: display_suggestions[x])
+    with col2:
+        number_of_songs = int(st.number_input(
+            "NUMBER OF SONGS", min_value=3, max_value=10))
+    with col3:
+        search_but = st.button("GENERATE PLAYLIST")
 
-    if st.button("GENERATE PLAYLIST"):
+    if search_but:
         selected_track = results['tracks']['items'][selected_song_index]
         track_id = selected_track['id']
 
@@ -55,7 +64,7 @@ if search_query:
         recommendations = recommendations[[
             'name', 'artists', 'release_date', 'explicit', 'duration_ms', 'album_cover', 'preview_url']]
 
-        print(f"{Fore.CYAN}{recommendations}")
+        print(f"\n{Fore.CYAN}{recommendations}\n")
 
         st.markdown(
             "<h2 style='text-align:center'>Recommended Songs  </h2>", unsafe_allow_html=True)
@@ -63,6 +72,8 @@ if search_query:
         for index, row in recommendations.iterrows():
             artists = ast.literal_eval(row['artists'])
             artists = ', '.join(list(artists))
+            duration = track_info_generator.convert_msTo_min(
+                row['duration_ms'])
             song_card = """
                 <div style="background-color: #121313; padding:15px; overflow:hidden; margin-bottom:20px">
                     <div style='display: inline-block; margin-right: 30px;'>
@@ -73,14 +84,17 @@ if search_query:
                                 <source src="{3}" type="audio/mp3">
                             </audio>
                     </div>
-                    <img src='{0}' height=100px' style='float:right'>
+                    <div style='display: inline-block; vertical-align: top;'>
+                        <p>Duration - {5}</p>
+                    </div>
+                    <img src='{0}' height=150px' style='float:right'>
                 </div>
-            """.format(row['album_cover'], row['name'], artists, row['preview_url'], row['release_date'])
+            """.format(row['album_cover'], row['name'], artists, row['preview_url'], row['release_date'], duration)
 
             with st.expander(row['name']+" - "+artists):
                 st.write(song_card, unsafe_allow_html=True)
 
-            time.sleep(1)
+            time.sleep(0.75)
 else:
     st.success(
         "Enter a search query to get suggestions. A list of available options will be shown.")

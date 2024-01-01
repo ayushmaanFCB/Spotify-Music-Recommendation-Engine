@@ -55,3 +55,12 @@ def apply_preview_url(sp, df):
         preview_url = track_details['preview_url']
         df.at[index, 'preview_url'] = preview_url
     return df
+
+
+def convert_msTo_min(milliseconds):
+    total_seconds = milliseconds / 1000
+
+    minutes = int(total_seconds // 60)
+    seconds = int(total_seconds % 60)
+
+    return f"{minutes}:{seconds}"
