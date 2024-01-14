@@ -8,18 +8,16 @@ import playlist_generator
 import ast
 from colorama import init, Fore
 import time
+import pickle
+from datetime import datetime
+import os
 
 init(autoreset=True)
 
 st.set_page_config(layout='wide')
 
-if 'clicked' not in st.session_state:
-    st.session_state.clicked = False
-
-
-def add_button():
-    st.session_state.clicked = True
-
+if os.path.exists("./.cache"):
+    os.remove("./.cache")
 
 try:
     config = configparser.ConfigParser()
@@ -31,6 +29,12 @@ try:
 
     sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
         client_id=SPOTIPY_CLIENT_ID, client_secret=SPOTIPY_CLIENT_SECRET))
+
+    sp_oauth = SpotifyOAuth(
+        SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET, SPOTIPY_REDIRECT_URI, scope='user-library-read user-read-private user-read-email playlist-read-private user-library-modify user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control playlist-modify-private playlist-modify-public')
+    # token_info = sp_oauth.get_cached_token()
+    auth_url = sp_oauth.get_authorize_url()
+
 except Exception as e:
     print(f"\n{Fore.RED}Failed to connect to Spotify API, check credentials...")
 
@@ -79,6 +83,10 @@ if search_query:
                 sp, recommendations)
             recommendations = track_info_generator.apply_preview_url(
                 sp, recommendations)
+
+            with open("./cache/fetched_ids.pkl", 'wb') as file:
+                pickle.dump(list(recommendations['id']), file)
+
             recommendations = recommendations[[
                 'name', 'artists', 'release_date', 'explicit', 'duration_ms', 'album_cover', 'preview_url']]
 
@@ -115,7 +123,10 @@ if search_query:
                     st.write(song_card, unsafe_allow_html=True)
 
                 time.sleep(0.75)
-        st.button('ADD TO USER PLAYLIST', on_click=add_button)
+
+            st.link_button(label="ADD TO PLAYLIST", url=auth_url)
+
+        # st.button('ADD TO USER PLAYLIST', on_click=add_button)
 
         with m_col2:
             st.markdown(
@@ -140,6 +151,29 @@ else:
             "Enter a search query to get suggestions. A list of available options will be shown.")
 
 
-if st.session_state.clicked:
-    st.write('Button clicked!')
-    st.slider('Select a value')
+if "code" in st.experimental_get_query_params():
+    a_code = st.experimental_get_query_params()["code"]
+    token_info = sp_oauth.get_access_token(a_code)
+
+    if token_info:
+        sp = spotipy.Spotify(auth=token_info['access_token'])
+        st.success(
+            "AUTHENTICATION SUCCESSFULL, PLAYLIST HAS BEEN ADDED TO USER LIBRARY.")
+
+        with open("./cache/fetched_ids.pkl", 'rb') as file:
+            recommendation_ids = pickle.load(file)
+        st.write(recommendation_ids)
+
+        playlist_name = 'Recommendations'
+        playlist_description = f'Songs from Spotipy Recommendation Engine - {str(datetime.now())}'
+        user_id = sp.me()['id']
+
+        playlist = sp.user_playlist_create(
+            user_id, playlist_name, public=True, description=playlist_description)
+        playlist_id = playlist['id']
+
+        tracks_to_add = ["spotify:track:"+id for id in recommendation_ids]
+        sp.playlist_add_items(playlist_id, tracks_to_add)
+
+    else:
+        st.warning("AUTHENTICATION HAS FAILED")
