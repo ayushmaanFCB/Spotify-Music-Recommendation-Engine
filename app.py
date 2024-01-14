@@ -1,6 +1,7 @@
 import streamlit as st
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
+from spotipy.oauth2 import SpotifyClientCredentials
 import configparser
 import track_info_generator
 import playlist_generator
@@ -12,6 +13,14 @@ init(autoreset=True)
 
 st.set_page_config(layout='wide')
 
+if 'clicked' not in st.session_state:
+    st.session_state.clicked = False
+
+
+def add_button():
+    st.session_state.clicked = True
+
+
 try:
     config = configparser.ConfigParser()
     config.read('./configs/config.cfg')
@@ -20,8 +29,8 @@ try:
     SPOTIPY_CLIENT_SECRET = config.get('SPOTIFY', 'SPOTIPY_CLIENT_SECRET')
     SPOTIPY_REDIRECT_URI = config.get('SPOTIFY', 'SPOTIPY_REDIRECT_URI')
 
-    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
-        SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET, SPOTIPY_REDIRECT_URI, scope='user-library-read'))
+    sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
+        client_id=SPOTIPY_CLIENT_ID, client_secret=SPOTIPY_CLIENT_SECRET))
 except Exception as e:
     print(f"\n{Fore.RED}Failed to connect to Spotify API, check credentials...")
 
@@ -106,6 +115,7 @@ if search_query:
                     st.write(song_card, unsafe_allow_html=True)
 
                 time.sleep(0.75)
+        st.button('ADD TO USER PLAYLIST', on_click=add_button)
 
         with m_col2:
             st.markdown(
@@ -122,8 +132,14 @@ if search_query:
                     </div>
                 """, unsafe_allow_html=True)
 
+
 else:
     c1, c2, c3 = st.columns([1, 1, 1])
     with c2:
         st.success(
             "Enter a search query to get suggestions. A list of available options will be shown.")
+
+
+if st.session_state.clicked:
+    st.write('Button clicked!')
+    st.slider('Select a value')
