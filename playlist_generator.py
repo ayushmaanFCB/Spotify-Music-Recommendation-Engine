@@ -89,28 +89,3 @@ def generate_playlist(input_song, num_recommendations, explicit):
     output_playlist = final_df.iloc[final_user_recommendations_subset]
 
     return output_playlist
-
-
-# if __name__ == '__main__':
-#     song = {'id': '2p8IUWQDrpjuFltbdgLOag',
-#             'name': 'After Hours',
-#             'popularity': 79,
-#             'duration_ms': 361027,
-#             'explicit': 0,
-#             'artists': "['The Weeknd']",
-#             'id_artists': "['1Xyo4u8uXC1ZmMpatF05PJ']",
-#             'release_date': '2020-03-20',
-#             'danceability': 0.664,
-#             'energy': 0.572,
-#             'key': 5,
-#             'loudness': -6.099,
-#             'mode': 0,
-#             'speechiness': 0.0305,
-#             'acousticness': 0.0811,
-#             'instrumentalness': 0.00604,
-#             'liveness': 0.121,
-#             'valence': 0.143,
-#             'tempo': 108.959,
-#             'time_signature': 4}
-
-#     print(generate_playlist([song]))
