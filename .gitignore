@@ -2,7 +2,7 @@
 .venv
 
 # IGNORE FOLDERS
-/data/
+# /data/
 /notebooks/
 /configs/
 
