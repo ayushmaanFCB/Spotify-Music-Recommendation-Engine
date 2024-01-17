@@ -2,8 +2,6 @@
 .venv
 
 # IGNORE FOLDERS
-# /data/
-/notebooks/
 /configs/
 
 # IGNORE FILES
