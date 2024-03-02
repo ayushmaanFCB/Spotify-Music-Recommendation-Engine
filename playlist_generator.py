@@ -89,3 +89,58 @@ def generate_playlist(input_song, num_recommendations, explicit):
     output_playlist = final_df.iloc[final_user_recommendations_subset]
 
     return output_playlist
+
+
+def generate_playlist_from_mood(input_mood, num_recommendations, explicit):
+    global df
+    global subsets
+    if not explicit:
+        df = df[df['explicit'] != 1]
+    else:
+        df, subsets = call_data()
+
+    print(df['explicit'].value_counts())
+
+    features = df.drop(
+        ['id', 'name', 'artists', 'id_artists', 'release_date', 'duration_ms', 'time_signature'], axis=1)
+    features = features.sort_index(axis='columns')
+    scaler = StandardScaler()
+    scaled_features = scaler.fit_transform(features)
+
+    user_input_df = pd.DataFrame(input_mood)
+    user_input_df = user_input_df.sort_index(axis='columns')
+    user_scaled_features = scaler.transform(user_input_df)
+
+    recommendations = []
+
+    for i, subset in enumerate(subsets):
+        scaler = StandardScaler()
+        # print("Iteration : ", i)
+
+        features = subset.drop(
+            ['id', 'name', 'popularity', 'duration_ms', 'explicit', 'artists', 'id_artists', 'release_date', 'key', 'mode', 'speechiness', 'instrumentalness', 'liveness', 'time_signature'], axis=1)
+        features = features.sort_index(axis='columns')
+        scaled_features = scaler.fit_transform(features)
+
+        user_cosine_sim_subset = cosine_similarity(
+            user_scaled_features, scaled_features)
+        user_recommendations_subset = get_recommendations_subset(
+            0, user_cosine_sim_subset, num_recommendations=5)
+        # print(user_recommendations_subset)
+
+        recommendations.append(subset.iloc[user_recommendations_subset])
+
+    final_df = pd.concat(recommendations, ignore_index=True)
+    final_features = final_df.drop(
+        ['id', 'name', 'popularity', 'duration_ms', 'explicit', 'artists', 'id_artists', 'release_date', 'key', 'mode', 'speechiness', 'instrumentalness', 'liveness', 'time_signature'], axis=1)
+    final_features = final_features.sort_index(axis='columns')
+    final_scaled_features = scaler.fit_transform(final_features)
+
+    final_user_cosine_sim_subset = cosine_similarity(
+        user_scaled_features, final_scaled_features)
+    final_user_recommendations_subset = get_recommendations_subset(
+        0, final_user_cosine_sim_subset, num_recommendations)
+
+    output_playlist = final_df.iloc[final_user_recommendations_subset]
+
+    return output_playlist

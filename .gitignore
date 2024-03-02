@@ -3,8 +3,11 @@
 
 # IGNORE FOLDERS
 /configs/
+/models/
 
 # IGNORE FILES
 test.ipynb
 test.py
 .cache
+
+5_Emotion_based_Recommendation.ipynb
