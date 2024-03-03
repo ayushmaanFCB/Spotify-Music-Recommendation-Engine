@@ -37,6 +37,8 @@ def get_recommendations_subset(song_index, cosine_sim_matrix, num_recommendation
 def generate_playlist(input_song, num_recommendations, explicit):
     global df
     global subsets
+    df = df.sample(frac=1).reset_index(drop=True)
+
     if not explicit:
         df = df[df['explicit'] != 1]
     else:
@@ -102,7 +104,7 @@ def generate_playlist_from_mood(input_mood, num_recommendations, explicit):
     print(df['explicit'].value_counts())
 
     features = df.drop(
-        ['id', 'name', 'artists', 'id_artists', 'release_date', 'duration_ms', 'time_signature'], axis=1)
+        ['id', 'name', 'popularity', 'duration_ms', 'explicit', 'artists', 'id_artists', 'release_date', 'key', 'mode', 'speechiness', 'instrumentalness', 'liveness', 'time_signature'], axis=1)
     features = features.sort_index(axis='columns')
     scaler = StandardScaler()
     scaled_features = scaler.fit_transform(features)
