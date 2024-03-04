@@ -9,28 +9,31 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import configparser
 import sys
+import ast
+import time
 
-# try:
-#     loaded_model = load_model("./models/model_70epochs.h5")
-#     print(f"\n{Fore.GREEN}Emotion Detection Model has been loaded successfully !!!")
-# except:
-#     print(f"\n{Fore.RED}Failed to load the model, Please check the logs for issue.")
+try:
+    loaded_model = load_model("./models/model_50epochs.h5")
+    print(f"\n{Fore.GREEN}Emotion Detection Model has been loaded successfully !!!")
+except:
+    print(f"\n{Fore.RED}Failed to load the model, Please check the logs for issue.")
 
 
-# try:
-#     config = configparser.ConfigParser()
-#     config.read('./configs/config.cfg')
+try:
+    config = configparser.ConfigParser()
+    config.read('./configs/config.cfg')
 
-#     SPOTIPY_CLIENT_ID = config.get('SPOTIFY', 'SPOTIPY_CLIENT_ID')
-#     SPOTIPY_CLIENT_SECRET = config.get('SPOTIFY', 'SPOTIPY_CLIENT_SECRET')
-#     SPOTIPY_REDIRECT_URI = config.get('SPOTIFY', 'SPOTIPY_REDIRECT_URI')
+    SPOTIPY_CLIENT_ID = config.get('SPOTIFY', 'SPOTIPY_CLIENT_ID')
+    SPOTIPY_CLIENT_SECRET = config.get('SPOTIFY', 'SPOTIPY_CLIENT_SECRET')
+    SPOTIPY_REDIRECT_URI = config.get('SPOTIFY', 'SPOTIPY_REDIRECT_URI')
 
-#     sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
-#         client_id=SPOTIPY_CLIENT_ID, client_secret=SPOTIPY_CLIENT_SECRET))
+    sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
+        client_id=SPOTIPY_CLIENT_ID, client_secret=SPOTIPY_CLIENT_SECRET))
+    print(f"\n{Fore.GREEN}Connected to Spotify API succesfully !!!")
 
-# except Exception as e:
-#     print(f"\n{Fore.RED}Failed to connect to Spotify API, Try Re-Running the app....")
-#     sys.exit(1)
+except Exception as e:
+    print(f"\n{Fore.RED}Failed to connect to Spotify API, Try Re-Running the app....")
+    sys.exit(1)
 
 
 st.markdown(
@@ -68,8 +71,11 @@ sad_avg = [0.5, 0.525, 0.55, -7.5, 0.3, 115]
 chill_avg = [0.575, 0.525, 0.425, -8.35, 0.55, 122.5]
 # angry_avg = [0.655, 0.78, 0.3, -7.5, 0.475, 130]
 
+# mood_dict = {
+#     0: "Angry", 1: "Happy", 2: "Sad", 3: "Neutral"
+# }
 mood_dict = {
-    0: "Angry", 1: "Happy", 2: "Sad", 3: "Neutral"
+    0: "Happy", 1: "Sad", 2: "Neutral"
 }
 
 if image_buffer is not None:
@@ -132,4 +138,35 @@ if image_buffer is not None:
         'name', 'artists', 'release_date', 'explicit', 'duration_ms', 'album_cover', 'preview_url']]
 
     print(f"\n{Fore.LIGHTCYAN_EX}{recommendations}")
-    st.write(recommendations)
+
+    st.markdown("<h3 style='text-align:center; color:#1cbc55'>RECOMMENDATIONS</h3>",
+                unsafe_allow_html=True)
+
+    for index, row in recommendations.iterrows():
+        artists = ast.literal_eval(row['artists'])
+        artists = ', '.join(list(artists))
+        duration = track_info_generator.convert_msTo_min(
+            row['duration_ms'])
+        song_card = """
+            <div style="background-color: #121313; padding:30px; overflow:hidden; margin-bottom:20px; border-radius: 30px;">
+                <div style='display: inline-block; margin-right: 30px;'>
+                        <h5 style='color:#1cbc55'>{1}</h5>
+                        <h6>{2}</h6>
+                        <p>Release Date : {4}</p>
+                        <p>Duration : {5}</p>
+                        <audio controls>
+                            <source src="{3}" type="audio/mp3">
+                        </audio>
+                </div>
+                <div style='float:right'>
+                    <img src='{0}' height='150px' >
+        """.format(row['album_cover'], row['name'], artists, row['preview_url'], row['release_date'], duration)
+        if row['explicit'] == 0:
+            song_card = song_card + "</div></div>"
+        else:
+            song_card = song_card + "<br><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAABEUlEQVR4nO2WQWoCQRBFeym5QNQuRzyD69zATbA/uAu4MHogF1noIQSzqUIvkOQCOmeJlKARnBmTocYJjh9q1fBfz+9m+jtXabXXL7UWY+IFUxK8WYx6NQVj9U6FkuDLMzZewswOHGaew1a9E+G6K4U2Fr0H6yTVU+FewuvZokaiu7OGHv0Zc2WcLRyiKQpMaf5Z4PYadWK8e8bHpSHBsxmYGEMSfP9mPGNkBvaM0Yl55i1uSf+pELDLKbqD/xp1tEI3adwFkcHlSpzbBUdlRe1yiu7gf/3LpLIeiY4MHonD8urPooUozb+06tPcl72wLazsCeLE8/+pt/s2aFtvBTFx+Mzs1lpBrQu9fmkqtDLaARzjPmj2d5gbAAAAAElFTkSuQmCC' style='margin-top: 25px; float:right'></div></div>"
+
+        with st.expander(row['name']+" - "+artists):
+            st.write(song_card, unsafe_allow_html=True)
+
+        time.sleep(0.75)

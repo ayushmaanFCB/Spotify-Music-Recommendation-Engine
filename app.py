@@ -36,6 +36,8 @@ try:
     token_info = sp_oauth.get_cached_token()
     auth_url = sp_oauth.get_authorize_url()
 
+    print(f"\n{Fore.GREEN}Connected to Spotify API succesfully !!!")
+
 except Exception as e:
     print(f"\n{Fore.RED}Failed to connect to Spotify API, Try Re-Running the app....")
     sys.exit(1)

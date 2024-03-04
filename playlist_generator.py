@@ -44,7 +44,7 @@ def generate_playlist(input_song, num_recommendations, explicit):
     else:
         df, subsets = call_data()
 
-    print(df['explicit'].value_counts())
+    # print(df['explicit'].value_counts())
 
     features = df.drop(
         ['id', 'name', 'artists', 'id_artists', 'release_date', 'duration_ms', 'time_signature'], axis=1)
@@ -101,7 +101,10 @@ def generate_playlist_from_mood(input_mood, num_recommendations, explicit):
     else:
         df, subsets = call_data()
 
-    print(df['explicit'].value_counts())
+    # print(df['explicit'].value_counts())
+
+    mask = df['popularity'] >= 65
+    df = df.drop(df[~mask].index)
 
     features = df.drop(
         ['id', 'name', 'popularity', 'duration_ms', 'explicit', 'artists', 'id_artists', 'release_date', 'key', 'mode', 'speechiness', 'instrumentalness', 'liveness', 'time_signature'], axis=1)
@@ -118,6 +121,9 @@ def generate_playlist_from_mood(input_mood, num_recommendations, explicit):
     for i, subset in enumerate(subsets):
         scaler = StandardScaler()
         # print("Iteration : ", i)
+
+        mask = subset['popularity'] >= 65
+        subset = subset.drop(subset[~mask].index)
 
         features = subset.drop(
             ['id', 'name', 'popularity', 'duration_ms', 'explicit', 'artists', 'id_artists', 'release_date', 'key', 'mode', 'speechiness', 'instrumentalness', 'liveness', 'time_signature'], axis=1)
