@@ -124,6 +124,8 @@ def generate_playlist_from_mood(input_mood, num_recommendations, explicit):
 
         mask = subset['popularity'] >= 65
         subset = subset.drop(subset[~mask].index)
+        print(subset.shape)
+        print(subset['popularity'].value_counts)
 
         features = subset.drop(
             ['id', 'name', 'popularity', 'duration_ms', 'explicit', 'artists', 'id_artists', 'release_date', 'key', 'mode', 'speechiness', 'instrumentalness', 'liveness', 'time_signature'], axis=1)
