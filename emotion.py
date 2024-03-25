@@ -11,6 +11,7 @@ import configparser
 import sys
 import ast
 import time
+import json
 
 try:
     loaded_model = load_model("./models/model_50epochs.h5")
@@ -56,27 +57,9 @@ image_buffer = st.camera_input(
 filt_col = ['acousticness', 'danceability',
             'energy', 'loudness', 'tempo', 'valence']
 
-happy_low = [0, 0.57, 0.4, -10.4, 75, 0.25]
-sad_low = [0.2, 0.3, 0.25, -11, 70, 0]
-chill_low = [0, 0.35, 0.25, -12.7, 80, 0.2]
-# angry_low = [0, 0.46, 0.56, -11, 90, 0.2]
+with open("./data/mood_parameters_narrow.json", "r") as file:
+    mood_parameters = json.load(file)
 
-happy_high = [0.75, 0.86, 1, -3, 170, 1]
-sad_high = [0.9, 0.7, 0.8, -4, 160, 0.7]
-chill_high = [0.85, 0.8, 0.8, -4, 165, 0.9]
-# angry_high = [0.6, 0.85, 1, -4, 170, 0.75]
-
-happy_avg = [0.715, 0.7, 0.375, -6.7, 0.625, 123]
-sad_avg = [0.5, 0.525, 0.55, -7.5, 0.3, 115]
-chill_avg = [0.575, 0.525, 0.425, -8.35, 0.55, 122.5]
-# angry_avg = [0.655, 0.78, 0.3, -7.5, 0.475, 130]
-
-# mood_dict = {
-#     0: "Angry", 1: "Happy", 2: "Sad", 3: "Neutral"
-# }
-mood_dict = {
-    0: "Happy", 1: "Sad", 2: "Neutral"
-}
 
 if image_buffer is not None:
     bytes_data = image_buffer.getvalue()
@@ -91,29 +74,9 @@ if image_buffer is not None:
     mood = np.argmax(predictions)
     mood_value = max(predictions[0])
 
+
     if mood == 0:
-        if mood_value > 0 and mood_value < 0.4:
-            mood_arr = happy_low
-        elif mood_value >= 0.4 and mood_value < 0.7:
-            mood_arr = happy_avg
-        else:
-            mood_arr = happy_high
-
-    if mood == 1:
-        if mood_value > 0 and mood_value < 0.4:
-            mood_arr = sad_low
-        elif mood_value >= 0.4 and mood_value < 0.7:
-            mood_arr = sad_avg
-        else:
-            mood_arr = sad_high
-
-    if mood == 2:
-        if mood_value > 0 and mood_value < 0.4:
-            mood_arr = chill_low
-        elif mood_value >= 0.4 and mood_value < 0.7:
-            mood_arr = chill_avg
-        else:
-            mood_arr = chill_high
+        mood_arr = mood_parameters["happy"]
 
     mood_input = {
         'acousticness': mood_arr[0],
@@ -125,7 +88,7 @@ if image_buffer is not None:
     }
 
     print(
-        f"\n{Fore.CYAN}Detected Mood from the snapshot : {mood_dict[mood]} \n Scores: {predictions[0]}")
+        f"\n{Fore.CYAN}Detected Mood from the snapshot : {mood_str} \n Scores: {predictions[0]}")
 
     recommendations = playlist_generator.generate_playlist_from_mood(
         [mood_input], num_recommendations=number_of_songs, explicit=explicit)
