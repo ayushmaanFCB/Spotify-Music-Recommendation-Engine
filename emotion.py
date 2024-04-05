@@ -74,9 +74,15 @@ if image_buffer is not None:
     mood = np.argmax(predictions)
     mood_value = max(predictions[0])
 
-
     if mood == 0:
+        mood_str = "happy"
         mood_arr = mood_parameters["happy"]
+    if mood == 1:
+        mood_str = "sad"
+        mood_arr = mood_parameters["sad"]
+    if mood == 2:
+        mood_str = "chill"
+        mood_arr = mood_parameters["neutral"]
 
     mood_input = {
         'acousticness': mood_arr[0],
@@ -133,5 +139,3 @@ if image_buffer is not None:
             st.write(song_card, unsafe_allow_html=True)
 
         time.sleep(0.75)
-
-#####
