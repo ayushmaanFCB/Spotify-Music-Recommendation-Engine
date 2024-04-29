@@ -13,6 +13,7 @@ import ast
 import time
 import json
 
+
 try:
     loaded_model = load_model("./models/model_50epochs.h5")
     print(f"\n{Fore.GREEN}Emotion Detection Model has been loaded successfully !!!")
@@ -73,16 +74,13 @@ if image_buffer is not None:
 
     mood = np.argmax(predictions)
     mood_value = max(predictions[0])
+    mood_mapping = {
+        0: ("happy", mood_parameters["happy"]),
+        1: ("sad", mood_parameters["sad"]),
+        2: ("chill", mood_parameters["neutral"])
+    }
 
-    if mood == 0:
-        mood_str = "happy"
-        mood_arr = mood_parameters["happy"]
-    if mood == 1:
-        mood_str = "sad"
-        mood_arr = mood_parameters["sad"]
-    if mood == 2:
-        mood_str = "chill"
-        mood_arr = mood_parameters["neutral"]
+    mood_str, mood_arr = mood_mapping.get(mood, ("unknown", []))
 
     mood_input = {
         'acousticness': mood_arr[0],
