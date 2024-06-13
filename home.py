@@ -20,12 +20,12 @@ def chatbot_page():
 
 
 with st.sidebar:
-    selected = option_menu("Menu", ["Tracks` by Vibe", "Music for your Mood", "Ask the Bot"],
+    selected = option_menu("Menu", ["Tracks by Vibe", "Music for your Mood", "Ask the Bot"],
                            icons=["bi-music-note-list",
                                   "bi-emoji-smile", "bi-robot"],
                            menu_icon="bi-spotify", default_index=0)
 
-if selected == "Track by Vibe":
+if selected == "Tracks by Vibe":
     main_page()
 elif selected == "Music for your Mood":
     emotion_page()
