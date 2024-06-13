@@ -17,7 +17,6 @@ import sys
 def app():
     init(autoreset=True)
 
-
     if os.path.exists("./.cache"):
         os.remove("./.cache")
 
@@ -37,7 +36,7 @@ def app():
         token_info = sp_oauth.get_cached_token()
         auth_url = sp_oauth.get_authorize_url()
 
-        print(f"\n{Fore.GREEN}Connected to Spotify API succesfully !!!")
+        # print(f"\n{Fore.GREEN}Connected to Spotify API succesfully !!!")
 
     except Exception as e:
         print(
@@ -99,7 +98,7 @@ def app():
             st.warning("AUTHENTICATION HAS FAILED")
 
     else:
-        c1, c2, c3 = st.columns([1, 1, 1])
+        c1, c2, c3 = st.columns([0.5, 1, 0.5])
         with c2:
             search_query = st.text_input("SEARCH FOR SONG")
 
@@ -203,7 +202,7 @@ def app():
                         """, unsafe_allow_html=True)
 
         else:
-            c1, c2, c3 = st.columns([1, 1, 1])
+            c1, c2, c3 = st.columns([0.5, 1, 0.5])
             with c2:
                 st.success(
-                    "Enter a search query to get suggestions. A list of available options will be shown.")
+                    "Enter a search query to get suggestions. A list of available songs within the Spotify database will be shown.")
