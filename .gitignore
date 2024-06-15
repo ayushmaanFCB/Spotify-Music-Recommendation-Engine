@@ -4,6 +4,7 @@
 # IGNORE FOLDERS
 /configs/
 /models/
+# /__pycache__/
 
 # IGNORE FILES
 test.ipynb

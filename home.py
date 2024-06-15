@@ -3,6 +3,9 @@ from streamlit_option_menu import option_menu
 import from_emotion
 import from_song
 import chatbot
+import warnings
+
+warnings.filterwarnings('ignore', category=UserWarning, module='streamlit')
 
 st.set_page_config(layout='wide')
 
