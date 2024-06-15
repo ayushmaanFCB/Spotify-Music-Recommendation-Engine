@@ -23,7 +23,8 @@ def app():
             yield word + " "
             time.sleep(0.1)
 
-    st.title("Chatbot")
+    st.markdown(
+        "<h1 style='text-align:center; color:#1cbc55'>CHAT TO KNOW MORE</h1>", unsafe_allow_html=True)
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
