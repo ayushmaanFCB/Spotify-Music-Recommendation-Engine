@@ -2,21 +2,38 @@
 # from spotipy.oauth2 import SpotifyOAuth
 # import configparser
 from pprint import pprint
+import time
 
 
 def structure_song(track_details, audio_details):
     song_data = {
-        'id': track_details['id'],
-        'name': track_details['name'],
-        'artists': [artist['name'] for artist in track_details['artists']],
-        'id_artists': [artist['id'] for artist in track_details['artists']],
-        'explicit': track_details['explicit'],
-        'popularity': track_details['popularity'],
-        'release_date': track_details['album']['release_date'],
+        "id": track_details["id"],
+        "name": track_details["name"],
+        "artists": [artist["name"] for artist in track_details["artists"]],
+        "id_artists": [artist["id"] for artist in track_details["artists"]],
+        "explicit": track_details["explicit"],
+        "popularity": track_details["popularity"],
+        "release_date": track_details["album"]["release_date"],
     }
 
     for feature, value in audio_details.items():
-        if feature in ['popularity', 'explicit', 'danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness', 'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo', 'duration_ms', 'time_signature']:
+        if feature in [
+            "popularity",
+            "explicit",
+            "danceability",
+            "energy",
+            "key",
+            "loudness",
+            "mode",
+            "speechiness",
+            "acousticness",
+            "instrumentalness",
+            "liveness",
+            "valence",
+            "tempo",
+            "duration_ms",
+            "time_signature",
+        ]:
             song_data[feature] = value
 
     return song_data
@@ -34,7 +51,7 @@ def structure_song(track_details, audio_details):
 
 
 def fetch_track_info(sp, id):
-    track_uri = 'spotify:track:'+id
+    track_uri = "spotify:track:" + id
     track_details = sp.track(track_uri)
     audio_details = sp.audio_features(track_uri)[0]
     song = structure_song(track_details, audio_details)
@@ -43,17 +60,19 @@ def fetch_track_info(sp, id):
 
 def apply_cover_images(sp, df):
     for index, row in df.iterrows():
-        track_details = sp.track(row['id'])
-        cover_image_url = track_details['album']['images'][0]['url']
-        df.at[index, 'album_cover'] = cover_image_url
+        track_details = sp.track(row["id"])
+        cover_image_url = track_details["album"]["images"][0]["url"]
+        df.at[index, "album_cover"] = cover_image_url
     return df
 
 
 def apply_preview_url(sp, df):
     for index, row in df.iterrows():
-        track_details = sp.track(row['id'])
-        preview_url = track_details['preview_url']
-        df.at[index, 'preview_url'] = preview_url
+        track_details = sp.track(row["id"])
+        # pprint(track_details)
+        time.sleep(2)
+        preview_url = track_details["preview_url"]
+        df.at[index, "preview_url"] = preview_url
     return df
 
 
@@ -68,4 +87,4 @@ def convert_msTo_min(milliseconds):
 
 def generate_additional_info(sp, track_id):
     track_details = sp.track(track_id)
-    return track_details['album']['images'][0]['url'], track_details['preview_url']
+    return track_details["album"]["images"][0]["url"], track_details["preview_url"]

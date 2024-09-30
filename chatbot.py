@@ -1,6 +1,9 @@
 import streamlit as st
 import time
 import random
+import os
+from pandasai import Agent
+import pandas as pd
 
 
 # def app():
@@ -10,21 +13,30 @@ import random
 #     st.warning("FEATURE STILL UNDER DEVLOPEMENT, SORRY FOR THE INCONVINIENCE")
 
 
+try:
+    os.environ["PANDASAI_API_KEY"] = (
+        "$2a$10$UWmuWvJnRiC6K2rc/RgS8.ECP5oDM07mkLF9lKqQxZRxDAV8eNYKu"
+    )
+except:
+    st.warning("The Bot API is facing some issue, please try again later.")
+
+try:
+    df = pd.read_csv("./data/tracks.csv")
+    agent = Agent(df)
+    print("\nChatbot Agent is ready...")
+except:
+    st.warning("The Bot API is facing some issue, please try again later.")
+
+
 def app():
-    def response_generator():
-        response = random.choice(
-            [
-                "Hello there! How can I assist you today?",
-                "Hi, human! Is there anything I can help you with?",
-                "Do you need help?",
-            ]
-        )
-        for word in response.split():
-            yield word + " "
-            time.sleep(0.1)
+    def response_generator(prompt):
+        response = agent.chat(prompt)
+        return response
 
     st.markdown(
-        "<h1 style='text-align:center; color:#1cbc55'>CHAT TO KNOW MORE</h1>", unsafe_allow_html=True)
+        "<h1 style='text-align:center; color:#1cbc55'>CHAT TO KNOW MORE</h1>",
+        unsafe_allow_html=True,
+    )
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -39,6 +51,9 @@ def app():
             st.markdown(prompt)
 
         with st.chat_message("assistant"):
-            response = st.write_stream(response_generator())
-        st.session_state.messages.append(
-            {"role": "assistant", "content": response})
+            response = st.write(response_generator(prompt=prompt))
+        st.session_state.messages.append({"role": "assistant", "content": response})
+
+
+if __name__ == "__main__":
+    app()
