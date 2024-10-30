@@ -5,9 +5,9 @@ import from_song
 import chatbot
 import warnings
 
-warnings.filterwarnings('ignore', category=UserWarning, module='streamlit')
+warnings.filterwarnings("ignore", category=UserWarning, module="streamlit")
 
-st.set_page_config(layout='wide')
+st.set_page_config(layout="wide")
 
 
 def main_page():
@@ -23,10 +23,13 @@ def chatbot_page():
 
 
 with st.sidebar:
-    selected = option_menu("Menu", ["Tracks by Vibe", "Music for your Mood", "Ask the Bot"],
-                           icons=["bi-music-note-list",
-                                  "bi-emoji-smile", "bi-robot"],
-                           menu_icon="bi-spotify", default_index=0)
+    selected = option_menu(
+        "Menu",
+        ["Tracks by Vibe", "Music for your Mood", "Ask the Bot"],
+        icons=["bi-music-note-list", "bi-emoji-smile", "bi-robot"],
+        menu_icon="bi-spotify",
+        default_index=0,
+    )
 
 if selected == "Tracks by Vibe":
     main_page()

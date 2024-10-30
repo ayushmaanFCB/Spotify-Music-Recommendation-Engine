@@ -69,9 +69,10 @@ def apply_cover_images(sp, df):
 def apply_preview_url(sp, df):
     for index, row in df.iterrows():
         track_details = sp.track(row["id"])
-        # pprint(track_details)
-        time.sleep(2)
-        preview_url = track_details["preview_url"]
+        try:
+            preview_url = track_details["preview_url"]
+        except:
+            preview_url = "https://github.com/anars/blank-audio/blob/master/45-seconds-of-silence.mp3"
         df.at[index, "preview_url"] = preview_url
     return df
 

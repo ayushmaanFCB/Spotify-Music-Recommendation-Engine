@@ -84,3 +84,567 @@ result = {'type': 'dataframe', 'value': songs_by_the_weeknd}
 
 [5 rows x 20 columns]}
 2024-09-30 11:49:33 [INFO] Executing Step 8: ResultParsing
+2024-09-30 13:00:26 [INFO] Question: which is the most popular song?
+2024-09-30 13:00:26 [INFO] Running PandasAI with bamboo_llm LLM...
+2024-09-30 13:00:26 [INFO] Prompt ID: 4d477ea8-d4a5-45dd-b202-7dca6fd552d2
+2024-09-30 13:00:26 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-09-30 13:00:27 [INFO] Executing Step 0: ValidatePipelineInput
+2024-09-30 13:00:27 [INFO] Executing Step 1: CacheLookup
+2024-09-30 13:00:27 [INFO] Using cached response
+2024-09-30 13:00:27 [INFO] Executing Step 2: PromptGeneration
+2024-09-30 13:00:27 [INFO] Executing Step 2: Skipping...
+2024-09-30 13:00:27 [INFO] Executing Step 3: CodeGenerator
+2024-09-30 13:00:27 [INFO] Executing Step 3: Skipping...
+2024-09-30 13:00:27 [INFO] Executing Step 4: CachePopulation
+2024-09-30 13:00:27 [INFO] Executing Step 4: Skipping...
+2024-09-30 13:00:27 [INFO] Executing Step 5: CodeCleaning
+2024-09-30 13:00:27 [INFO] 
+Code running:
+```
+most_popular_song = dfs[0].loc[dfs[0]['popularity'].idxmax()]
+most_popular_song_name = most_popular_song['name']
+result = {'type': 'string', 'value': f"The most popular song is '{most_popular_song_name}'."}
+        ```
+2024-09-30 13:00:27 [INFO] Executing Step 6: CodeExecution
+2024-09-30 13:00:27 [INFO] Executing Step 7: ResultValidation
+2024-09-30 13:00:27 [INFO] Answer: {'type': 'string', 'value': "The most popular song is 'Peaches (feat. Daniel Caesar & Giveon)'."}
+2024-09-30 13:00:27 [INFO] Executing Step 8: ResultParsing
+2024-09-30 13:06:59 [WARNING] From D:\CSE 310 - Artificial Intelligence and Machine Learning\Spotify Recommendation Engine\.venv\lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2024-09-30 13:16:04 [WARNING] Compiled the loaded model, but the compiled metrics have yet to be built. `model.compile_metrics` will be empty until you train or evaluate the model.
+2024-09-30 13:16:04 [WARNING] Error in loading the saved optimizer state. As a result, your model is starting with a freshly initialized optimizer.
+2024-09-30 13:19:23 [INFO] Question: Give me 5 songs by the artist The Weeknd
+2024-09-30 13:19:23 [INFO] Running PandasAI with bamboo_llm LLM...
+2024-09-30 13:19:23 [INFO] Prompt ID: 3d105bff-2d06-4ec1-84d5-85da2556c796
+2024-09-30 13:19:23 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-09-30 13:19:25 [INFO] Executing Step 0: ValidatePipelineInput
+2024-09-30 13:19:25 [INFO] Executing Step 1: CacheLookup
+2024-09-30 13:19:25 [INFO] Executing Step 2: PromptGeneration
+2024-09-30 13:19:27 [INFO] Using prompt: <dataframe>
+dfs[0]:586672x20
+id,name,popularity,duration_ms,explicit,artists,id_artists,release_date,danceability,energy,key,loudness,mode,speechiness,acousticness,instrumentalness,liveness,valence,tempo,time_signature
+6JtEjhCAeb1qIiZ7ZwBFbF,"Preludes, Op.34: No. 5 in D",95,89360,1,['Paco Barrón y sus Norteños Clan'],['1DrIvq4XBoCgiQcv3w5tRu'],2014-02-08,0.0572,0.00631,4,-17.244,0,0.551,0.0873,1.68e-06,0.0708,0.0908,183.28,0
+6I1UXqglOINThfiQuSMfls,Odpust Mi Laska,23,292338,0,['Los De Salta'],['36gGhh6LVf87HeDHnSQ0BD'],1981-01-14,0.751,0.276,7,-21.58,1,0.905,0.0943,6.28e-06,0.64,0.0134,144.017,4
+7htmTROZJx20TobX0yr6vK,,98,444827,1,['Lars Jansson'],['3GxW2mmzRySZHcA0RUk8d8'],2003-08-11,0.0947,0.000734,2,-18.453,0,0.0362,0.331,0.397,0.019,0.203,94.998,3
+</dataframe>
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+
+
+
+
+### QUERY
+ Give me 5 songs by the artist The Weeknd
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+2024-09-30 13:19:27 [INFO] Executing Step 3: CodeGenerator
+2024-09-30 13:19:29 [INFO] Prompt used:
+            None
+            
+2024-09-30 13:19:29 [INFO] Code generated:
+            ```
+            # TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+df = dfs[0]  # Assuming the data for songs is in the first dataframe
+songs_by_the_weeknd = df[df['artists'].str.contains('The Weeknd')].head(5)
+
+result = {"type": "dataframe", "value": songs_by_the_weeknd}
+            ```
+            
+2024-09-30 13:19:29 [INFO] Executing Step 4: CachePopulation
+2024-09-30 13:19:29 [INFO] Executing Step 5: CodeCleaning
+2024-09-30 13:19:29 [INFO] 
+Code running:
+```
+df = dfs[0]
+songs_by_the_weeknd = df[df['artists'].str.contains('The Weeknd')].head(5)
+result = {'type': 'dataframe', 'value': songs_by_the_weeknd}
+        ```
+2024-09-30 13:19:29 [INFO] Executing Step 6: CodeExecution
+2024-09-30 13:19:29 [INFO] Executing Step 7: ResultValidation
+2024-09-30 13:19:29 [INFO] Answer: {'type': 'dataframe', 'value':                            id                                   name  popularity  duration_ms  explicit  ... instrumentalness liveness valence    tempo  time_signature
+84224  0V4l4GQhgnWQGtCWpvA7va                              Crew Love          71       208813         1  ...         0.000000   0.2290  0.2940  160.152               4
+85128  6VwBbL8CzPiC4QV66ay7oR                           Wicked Games          75       323747         1  ...         0.000005   0.3250  0.3260  114.078               4
+85179  50iiDJGpAPdr2VTrz999XA  House Of Balloons / Glass Table Girls          72       405213         1  ...         0.009430   0.3010  0.3190   89.019               4
+85190  6u0dQik0aif7FQlrhycG1L                            The Morning          72       312427         1  ...         0.000000   0.1040  0.1860  120.073               4
+85218  5fohLPNqO6TqwrZ7BoUWUT                          High For This          71       247227         0  ...         0.000667   0.0777  0.0687   74.950               4
+
+[5 rows x 20 columns]}
+2024-09-30 13:19:29 [INFO] Executing Step 8: ResultParsing
+2024-09-30 13:20:06 [INFO] Question: Which is the song with highest popularity by the Artist The Weeknd?
+2024-09-30 13:20:06 [INFO] Running PandasAI with bamboo_llm LLM...
+2024-09-30 13:20:06 [INFO] Prompt ID: ebc58b67-844f-4b49-9195-bd678599393e
+2024-09-30 13:20:06 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-09-30 13:20:06 [INFO] Executing Step 0: ValidatePipelineInput
+2024-09-30 13:20:06 [INFO] Executing Step 1: CacheLookup
+2024-09-30 13:20:06 [INFO] Executing Step 2: PromptGeneration
+2024-09-30 13:20:08 [INFO] Using prompt: <dataframe>
+dfs[0]:586672x20
+id,name,popularity,duration_ms,explicit,artists,id_artists,release_date,danceability,energy,key,loudness,mode,speechiness,acousticness,instrumentalness,liveness,valence,tempo,time_signature
+6JtEjhCAeb1qIiZ7ZwBFbF,"Preludes, Op.34: No. 5 in D",95,89360,1,['Paco Barrón y sus Norteños Clan'],['1DrIvq4XBoCgiQcv3w5tRu'],2014-02-08,0.0572,0.00631,4,-17.244,0,0.551,0.0873,1.68e-06,0.0708,0.0908,183.28,0
+6I1UXqglOINThfiQuSMfls,Odpust Mi Laska,23,292338,0,['Los De Salta'],['36gGhh6LVf87HeDHnSQ0BD'],1981-01-14,0.751,0.276,7,-21.58,1,0.905,0.0943,6.28e-06,0.64,0.0134,144.017,4
+7htmTROZJx20TobX0yr6vK,,98,444827,1,['Lars Jansson'],['3GxW2mmzRySZHcA0RUk8d8'],2003-08-11,0.0947,0.000734,2,-18.453,0,0.0362,0.331,0.397,0.019,0.203,94.998,3
+</dataframe>
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+
+
+
+
+### QUERY
+ Which is the song with highest popularity by the Artist The Weeknd?
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+2024-09-30 13:20:08 [INFO] Executing Step 3: CodeGenerator
+2024-09-30 13:20:11 [INFO] Prompt used:
+            None
+            
+2024-09-30 13:20:11 [INFO] Code generated:
+            ```
+            import pandas as pd
+
+# Filter the dataframe to only include songs by The Weeknd
+the_weeknd_songs = dfs[0][dfs[0]['artists'].apply(lambda x: 'The Weeknd' in x)]
+
+# Find the song with the highest popularity
+highest_popularity_song = the_weeknd_songs.loc[the_weeknd_songs['popularity'].idxmax()]
+
+result = {"type": "string", "value": f"The song with the highest popularity by The Weeknd is '{highest_popularity_song['name']}' with a popularity score of {highest_popularity_song['popularity']}."}
+            ```
+            
+2024-09-30 13:20:11 [INFO] Executing Step 4: CachePopulation
+2024-09-30 13:20:11 [INFO] Executing Step 5: CodeCleaning
+2024-09-30 13:20:11 [INFO] 
+Code running:
+```
+the_weeknd_songs = dfs[0][dfs[0]['artists'].apply(lambda x: 'The Weeknd' in x)]
+highest_popularity_song = the_weeknd_songs.loc[the_weeknd_songs['popularity'].idxmax()]
+result = {'type': 'string', 'value': f"The song with the highest popularity by The Weeknd is '{highest_popularity_song['name']}' with a popularity score of {highest_popularity_song['popularity']}."}
+        ```
+2024-09-30 13:20:11 [INFO] Executing Step 6: CodeExecution
+2024-09-30 13:20:11 [INFO] Executing Step 7: ResultValidation
+2024-09-30 13:20:11 [INFO] Answer: {'type': 'string', 'value': "The song with the highest popularity by The Weeknd is 'Save Your Tears' with a popularity score of 97."}
+2024-09-30 13:20:11 [INFO] Executing Step 8: ResultParsing
+2024-09-30 13:20:45 [INFO] Question: Give me 5 most popular songs by the artist The Weeknd?
+2024-09-30 13:20:45 [INFO] Running PandasAI with bamboo_llm LLM...
+2024-09-30 13:20:45 [INFO] Prompt ID: f8b9ca30-43cd-441a-aac7-bd6de4d6a4bf
+2024-09-30 13:20:45 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-09-30 13:20:45 [INFO] Executing Step 0: ValidatePipelineInput
+2024-09-30 13:20:45 [INFO] Executing Step 1: CacheLookup
+2024-09-30 13:20:45 [INFO] Executing Step 2: PromptGeneration
+2024-09-30 13:20:47 [INFO] Using prompt: <dataframe>
+dfs[0]:586672x20
+id,name,popularity,duration_ms,explicit,artists,id_artists,release_date,danceability,energy,key,loudness,mode,speechiness,acousticness,instrumentalness,liveness,valence,tempo,time_signature
+6JtEjhCAeb1qIiZ7ZwBFbF,"Preludes, Op.34: No. 5 in D",95,89360,1,['Paco Barrón y sus Norteños Clan'],['1DrIvq4XBoCgiQcv3w5tRu'],2014-02-08,0.0572,0.00631,4,-17.244,0,0.551,0.0873,1.68e-06,0.0708,0.0908,183.28,0
+6I1UXqglOINThfiQuSMfls,Odpust Mi Laska,23,292338,0,['Los De Salta'],['36gGhh6LVf87HeDHnSQ0BD'],1981-01-14,0.751,0.276,7,-21.58,1,0.905,0.0943,6.28e-06,0.64,0.0134,144.017,4
+7htmTROZJx20TobX0yr6vK,,98,444827,1,['Lars Jansson'],['3GxW2mmzRySZHcA0RUk8d8'],2003-08-11,0.0947,0.000734,2,-18.453,0,0.0362,0.331,0.397,0.019,0.203,94.998,3
+</dataframe>
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+
+
+
+
+### QUERY
+ Give me 5 most popular songs by the artist The Weeknd?
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+2024-09-30 13:20:47 [INFO] Executing Step 3: CodeGenerator
+2024-09-30 13:20:50 [INFO] Prompt used:
+            None
+            
+2024-09-30 13:20:50 [INFO] Code generated:
+            ```
+            # TODO: import the required dependencies
+import pandas as pd
+
+# Filter the DataFrame to only include songs by The Weeknd
+the_weeknd_songs = dfs[0][dfs[0]['artists'].str.contains('The Weeknd')]
+
+# Sort the songs by popularity in descending order
+top_5_the_weeknd_songs = the_weeknd_songs.sort_values(by='popularity', ascending=False).head(5)
+
+top_5_the_weeknd_songs
+            ```
+            
+2024-09-30 13:20:50 [INFO] Executing Step 4: CachePopulation
+2024-09-30 13:20:50 [INFO] Executing Step 5: CodeCleaning
+2024-09-30 13:20:50 [INFO] 
+Code running:
+```
+the_weeknd_songs = dfs[0][dfs[0]['artists'].str.contains('The Weeknd')]
+top_5_the_weeknd_songs = the_weeknd_songs.sort_values(by='popularity', ascending=False).head(5)
+top_5_the_weeknd_songs
+        ```
+2024-09-30 13:20:50 [INFO] Executing Step 6: CodeExecution
+2024-09-30 13:20:51 [ERROR] Failed with error: Traceback (most recent call last):
+  File "D:\CSE 310 - Artificial Intelligence and Machine Learning\Spotify Recommendation Engine\.venv\lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 85, in execute
+    result = self.execute_code(code_to_run, code_context)
+  File "D:\CSE 310 - Artificial Intelligence and Machine Learning\Spotify Recommendation Engine\.venv\lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 175, in execute_code
+    raise NoResultFoundError("No result returned")
+pandasai.exceptions.NoResultFoundError: No result returned
+
+2024-09-30 13:20:51 [WARNING] Failed to execute code retrying with a correction framework [retry number: 1]
+2024-09-30 13:20:51 [INFO] Executing Pipeline: ErrorCorrectionPipeline
+2024-09-30 13:20:51 [INFO] Executing Step 0: ErrorPromptGeneration
+2024-09-30 13:20:51 [INFO] Using prompt: <dataframe>
+dfs[0]:586672x20
+id,name,popularity,duration_ms,explicit,artists,id_artists,release_date,danceability,energy,key,loudness,mode,speechiness,acousticness,instrumentalness,liveness,valence,tempo,time_signature
+6JtEjhCAeb1qIiZ7ZwBFbF,"Preludes, Op.34: No. 5 in D",95,89360,1,['Paco Barrón y sus Norteños Clan'],['1DrIvq4XBoCgiQcv3w5tRu'],2014-02-08,0.0572,0.00631,4,-17.244,0,0.551,0.0873,1.68e-06,0.0708,0.0908,183.28,0
+6I1UXqglOINThfiQuSMfls,Odpust Mi Laska,23,292338,0,['Los De Salta'],['36gGhh6LVf87HeDHnSQ0BD'],1981-01-14,0.751,0.276,7,-21.58,1,0.905,0.0943,6.28e-06,0.64,0.0134,144.017,4
+7htmTROZJx20TobX0yr6vK,,98,444827,1,['Lars Jansson'],['3GxW2mmzRySZHcA0RUk8d8'],2003-08-11,0.0947,0.000734,2,-18.453,0,0.0362,0.331,0.397,0.019,0.203,94.998,3
+</dataframe>
+
+
+The user asked the following question:
+### QUERY
+ Give me 5 songs by the artist The Weeknd
+### ANSWER
+ Check it out: <dataframe>
+### QUERY
+ Which is the song with highest popularity by the Artist The Weeknd?
+### ANSWER
+ The song with the highest popularity by The Weeknd is 'Save Your Tears' with a popularity score of 9 ...
+### QUERY
+ Give me 5 most popular songs by the artist The Weeknd?
+
+You generated this python code:
+the_weeknd_songs = dfs[0][dfs[0]['artists'].str.contains('The Weeknd')]
+top_5_the_weeknd_songs = the_weeknd_songs.sort_values(by='popularity', ascending=False).head(5)
+top_5_the_weeknd_songs
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\CSE 310 - Artificial Intelligence and Machine Learning\Spotify Recommendation Engine\.venv\lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 85, in execute
+    result = self.execute_code(code_to_run, code_context)
+  File "D:\CSE 310 - Artificial Intelligence and Machine Learning\Spotify Recommendation Engine\.venv\lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 175, in execute_code
+    raise NoResultFoundError("No result returned")
+pandasai.exceptions.NoResultFoundError: No result returned
+
+
+Fix the python code above and return the new python code:
+2024-09-30 13:20:51 [INFO] Executing Step 1: CodeGenerator
+2024-09-30 13:20:53 [INFO] Prompt used:
+            None
+            
+2024-09-30 13:20:53 [INFO] Code generated:
+            ```
+            the_weeknd_songs = dfs[0][dfs[0]['artists'].str.contains('The Weeknd')]
+top_5_the_weeknd_songs = the_weeknd_songs.sort_values(by='popularity', ascending=False).head(5)
+top_5_the_weeknd_songs
+            ```
+            
+2024-09-30 13:20:53 [INFO] Executing Step 2: CodeCleaning
+2024-09-30 13:20:53 [INFO] 
+Code running:
+```
+the_weeknd_songs = dfs[0][dfs[0]['artists'].str.contains('The Weeknd')]
+top_5_the_weeknd_songs = the_weeknd_songs.sort_values(by='popularity', ascending=False).head(5)
+top_5_the_weeknd_songs
+        ```
+2024-09-30 13:20:53 [ERROR] Failed with error: Traceback (most recent call last):
+  File "D:\CSE 310 - Artificial Intelligence and Machine Learning\Spotify Recommendation Engine\.venv\lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 85, in execute
+    result = self.execute_code(code_to_run, code_context)
+  File "D:\CSE 310 - Artificial Intelligence and Machine Learning\Spotify Recommendation Engine\.venv\lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 175, in execute_code
+    raise NoResultFoundError("No result returned")
+pandasai.exceptions.NoResultFoundError: No result returned
+
+2024-09-30 13:20:53 [WARNING] Failed to execute code retrying with a correction framework [retry number: 2]
+2024-09-30 13:20:53 [INFO] Executing Pipeline: ErrorCorrectionPipeline
+2024-09-30 13:20:53 [INFO] Executing Step 0: ErrorPromptGeneration
+2024-09-30 13:20:53 [INFO] Using prompt: <dataframe>
+dfs[0]:586672x20
+id,name,popularity,duration_ms,explicit,artists,id_artists,release_date,danceability,energy,key,loudness,mode,speechiness,acousticness,instrumentalness,liveness,valence,tempo,time_signature
+6JtEjhCAeb1qIiZ7ZwBFbF,"Preludes, Op.34: No. 5 in D",95,89360,1,['Paco Barrón y sus Norteños Clan'],['1DrIvq4XBoCgiQcv3w5tRu'],2014-02-08,0.0572,0.00631,4,-17.244,0,0.551,0.0873,1.68e-06,0.0708,0.0908,183.28,0
+6I1UXqglOINThfiQuSMfls,Odpust Mi Laska,23,292338,0,['Los De Salta'],['36gGhh6LVf87HeDHnSQ0BD'],1981-01-14,0.751,0.276,7,-21.58,1,0.905,0.0943,6.28e-06,0.64,0.0134,144.017,4
+7htmTROZJx20TobX0yr6vK,,98,444827,1,['Lars Jansson'],['3GxW2mmzRySZHcA0RUk8d8'],2003-08-11,0.0947,0.000734,2,-18.453,0,0.0362,0.331,0.397,0.019,0.203,94.998,3
+</dataframe>
+
+
+The user asked the following question:
+### QUERY
+ Give me 5 songs by the artist The Weeknd
+### ANSWER
+ Check it out: <dataframe>
+### QUERY
+ Which is the song with highest popularity by the Artist The Weeknd?
+### ANSWER
+ The song with the highest popularity by The Weeknd is 'Save Your Tears' with a popularity score of 9 ...
+### QUERY
+ Give me 5 most popular songs by the artist The Weeknd?
+
+You generated this python code:
+the_weeknd_songs = dfs[0][dfs[0]['artists'].str.contains('The Weeknd')]
+top_5_the_weeknd_songs = the_weeknd_songs.sort_values(by='popularity', ascending=False).head(5)
+top_5_the_weeknd_songs
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\CSE 310 - Artificial Intelligence and Machine Learning\Spotify Recommendation Engine\.venv\lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 85, in execute
+    result = self.execute_code(code_to_run, code_context)
+  File "D:\CSE 310 - Artificial Intelligence and Machine Learning\Spotify Recommendation Engine\.venv\lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 175, in execute_code
+    raise NoResultFoundError("No result returned")
+pandasai.exceptions.NoResultFoundError: No result returned
+
+
+Fix the python code above and return the new python code:
+2024-09-30 13:20:53 [INFO] Executing Step 1: CodeGenerator
+2024-09-30 13:20:55 [INFO] Prompt used:
+            None
+            
+2024-09-30 13:20:55 [INFO] Code generated:
+            ```
+            the_weeknd_songs = dfs[0][dfs[0]['artists'].str.contains('The Weeknd')]
+top_5_the_weeknd_songs = the_weeknd_songs.sort_values(by='popularity', ascending=False).head(5)
+top_5_the_weeknd_songs
+            ```
+            
+2024-09-30 13:20:55 [INFO] Executing Step 2: CodeCleaning
+2024-09-30 13:20:55 [INFO] 
+Code running:
+```
+the_weeknd_songs = dfs[0][dfs[0]['artists'].str.contains('The Weeknd')]
+top_5_the_weeknd_songs = the_weeknd_songs.sort_values(by='popularity', ascending=False).head(5)
+top_5_the_weeknd_songs
+        ```
+2024-09-30 13:20:55 [ERROR] Failed with error: Traceback (most recent call last):
+  File "D:\CSE 310 - Artificial Intelligence and Machine Learning\Spotify Recommendation Engine\.venv\lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 85, in execute
+    result = self.execute_code(code_to_run, code_context)
+  File "D:\CSE 310 - Artificial Intelligence and Machine Learning\Spotify Recommendation Engine\.venv\lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 175, in execute_code
+    raise NoResultFoundError("No result returned")
+pandasai.exceptions.NoResultFoundError: No result returned
+
+2024-09-30 13:20:55 [WARNING] Failed to execute code retrying with a correction framework [retry number: 3]
+2024-09-30 13:20:55 [INFO] Executing Pipeline: ErrorCorrectionPipeline
+2024-09-30 13:20:55 [INFO] Executing Step 0: ErrorPromptGeneration
+2024-09-30 13:20:55 [INFO] Using prompt: <dataframe>
+dfs[0]:586672x20
+id,name,popularity,duration_ms,explicit,artists,id_artists,release_date,danceability,energy,key,loudness,mode,speechiness,acousticness,instrumentalness,liveness,valence,tempo,time_signature
+6JtEjhCAeb1qIiZ7ZwBFbF,"Preludes, Op.34: No. 5 in D",95,89360,1,['Paco Barrón y sus Norteños Clan'],['1DrIvq4XBoCgiQcv3w5tRu'],2014-02-08,0.0572,0.00631,4,-17.244,0,0.551,0.0873,1.68e-06,0.0708,0.0908,183.28,0
+6I1UXqglOINThfiQuSMfls,Odpust Mi Laska,23,292338,0,['Los De Salta'],['36gGhh6LVf87HeDHnSQ0BD'],1981-01-14,0.751,0.276,7,-21.58,1,0.905,0.0943,6.28e-06,0.64,0.0134,144.017,4
+7htmTROZJx20TobX0yr6vK,,98,444827,1,['Lars Jansson'],['3GxW2mmzRySZHcA0RUk8d8'],2003-08-11,0.0947,0.000734,2,-18.453,0,0.0362,0.331,0.397,0.019,0.203,94.998,3
+</dataframe>
+
+
+The user asked the following question:
+### QUERY
+ Give me 5 songs by the artist The Weeknd
+### ANSWER
+ Check it out: <dataframe>
+### QUERY
+ Which is the song with highest popularity by the Artist The Weeknd?
+### ANSWER
+ The song with the highest popularity by The Weeknd is 'Save Your Tears' with a popularity score of 9 ...
+### QUERY
+ Give me 5 most popular songs by the artist The Weeknd?
+
+You generated this python code:
+the_weeknd_songs = dfs[0][dfs[0]['artists'].str.contains('The Weeknd')]
+top_5_the_weeknd_songs = the_weeknd_songs.sort_values(by='popularity', ascending=False).head(5)
+top_5_the_weeknd_songs
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\CSE 310 - Artificial Intelligence and Machine Learning\Spotify Recommendation Engine\.venv\lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 85, in execute
+    result = self.execute_code(code_to_run, code_context)
+  File "D:\CSE 310 - Artificial Intelligence and Machine Learning\Spotify Recommendation Engine\.venv\lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 175, in execute_code
+    raise NoResultFoundError("No result returned")
+pandasai.exceptions.NoResultFoundError: No result returned
+
+
+Fix the python code above and return the new python code:
+2024-09-30 13:20:55 [INFO] Executing Step 1: CodeGenerator
+2024-09-30 13:20:59 [INFO] Prompt used:
+            None
+            
+2024-09-30 13:20:59 [INFO] Code generated:
+            ```
+            the_weeknd_songs = dfs[0][dfs[0]['artists'].str.contains('The Weeknd')]
+top_5_the_weeknd_songs = the_weeknd_songs.sort_values(by='popularity', ascending=False).head(5)
+top_5_the_weeknd_songs
+            ```
+            
+2024-09-30 13:20:59 [INFO] Executing Step 2: CodeCleaning
+2024-09-30 13:20:59 [INFO] 
+Code running:
+```
+the_weeknd_songs = dfs[0][dfs[0]['artists'].str.contains('The Weeknd')]
+top_5_the_weeknd_songs = the_weeknd_songs.sort_values(by='popularity', ascending=False).head(5)
+top_5_the_weeknd_songs
+        ```
+2024-09-30 13:20:59 [ERROR] Failed with error: Traceback (most recent call last):
+  File "D:\CSE 310 - Artificial Intelligence and Machine Learning\Spotify Recommendation Engine\.venv\lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 85, in execute
+    result = self.execute_code(code_to_run, code_context)
+  File "D:\CSE 310 - Artificial Intelligence and Machine Learning\Spotify Recommendation Engine\.venv\lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 175, in execute_code
+    raise NoResultFoundError("No result returned")
+pandasai.exceptions.NoResultFoundError: No result returned
+
+2024-09-30 13:20:59 [ERROR] Pipeline failed on step 6: No result returned
+2024-09-30 13:21:32 [INFO] Question: Give me 5 popular songs by the artist The Weeknd?
+
+
+2024-09-30 13:21:32 [INFO] Running PandasAI with bamboo_llm LLM...
+2024-09-30 13:21:32 [INFO] Prompt ID: 81ffd01f-f199-4fa2-9af8-1b5588431f58
+2024-09-30 13:21:32 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-09-30 13:21:32 [INFO] Executing Step 0: ValidatePipelineInput
+2024-09-30 13:21:32 [INFO] Executing Step 1: CacheLookup
+2024-09-30 13:21:32 [INFO] Executing Step 2: PromptGeneration
+2024-09-30 13:21:34 [INFO] Using prompt: <dataframe>
+dfs[0]:586672x20
+id,name,popularity,duration_ms,explicit,artists,id_artists,release_date,danceability,energy,key,loudness,mode,speechiness,acousticness,instrumentalness,liveness,valence,tempo,time_signature
+6JtEjhCAeb1qIiZ7ZwBFbF,"Preludes, Op.34: No. 5 in D",95,89360,1,['Paco Barrón y sus Norteños Clan'],['1DrIvq4XBoCgiQcv3w5tRu'],2014-02-08,0.0572,0.00631,4,-17.244,0,0.551,0.0873,1.68e-06,0.0708,0.0908,183.28,0
+6I1UXqglOINThfiQuSMfls,Odpust Mi Laska,23,292338,0,['Los De Salta'],['36gGhh6LVf87HeDHnSQ0BD'],1981-01-14,0.751,0.276,7,-21.58,1,0.905,0.0943,6.28e-06,0.64,0.0134,144.017,4
+7htmTROZJx20TobX0yr6vK,,98,444827,1,['Lars Jansson'],['3GxW2mmzRySZHcA0RUk8d8'],2003-08-11,0.0947,0.000734,2,-18.453,0,0.0362,0.331,0.397,0.019,0.203,94.998,3
+</dataframe>
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+
+
+
+
+### QUERY
+ Give me 5 popular songs by the artist The Weeknd?
+
+
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+2024-09-30 13:21:34 [INFO] Executing Step 3: CodeGenerator
+2024-09-30 13:21:37 [INFO] Prompt used:
+            None
+            
+2024-09-30 13:21:37 [INFO] Code generated:
+            ```
+            # TODO: import the required dependencies
+import pandas as pd
+
+# Filter the dataframe to only include songs by The Weeknd
+the_weeknd_songs = dfs[0][dfs[0]['artists'].apply(lambda x: 'The Weeknd' in x)]
+
+# Sort the songs by popularity in descending order and select the top 5
+top_5_the_weeknd_songs = the_weeknd_songs.sort_values(by='popularity', ascending=False).head(5)
+
+# Extract the names of the top 5 songs
+top_5_song_names = top_5_the_weeknd_songs['name']
+
+# Create a string with the top 5 song names
+top_5_song_names_str = ', '.join(top_5_song_names)
+
+# Declare result variable
+result = {"type": "string", "value": f"The top 5 popular songs by The Weeknd are: {top_5_song_names_str}"}
+            ```
+            
+2024-09-30 13:21:37 [INFO] Executing Step 4: CachePopulation
+2024-09-30 13:21:37 [INFO] Executing Step 5: CodeCleaning
+2024-09-30 13:21:37 [INFO] 
+Code running:
+```
+the_weeknd_songs = dfs[0][dfs[0]['artists'].apply(lambda x: 'The Weeknd' in x)]
+top_5_the_weeknd_songs = the_weeknd_songs.sort_values(by='popularity', ascending=False).head(5)
+top_5_song_names = top_5_the_weeknd_songs['name']
+top_5_song_names_str = ', '.join(top_5_song_names)
+result = {'type': 'string', 'value': f'The top 5 popular songs by The Weeknd are: {top_5_song_names_str}'}
+        ```
+2024-09-30 13:21:37 [INFO] Executing Step 6: CodeExecution
+2024-09-30 13:21:37 [INFO] Executing Step 7: ResultValidation
+2024-09-30 13:21:37 [INFO] Answer: {'type': 'string', 'value': 'The top 5 popular songs by The Weeknd are: Save Your Tears, Blinding Lights, The Hills, Starboy, In Your Eyes'}
+2024-09-30 13:21:37 [INFO] Executing Step 8: ResultParsing
+2024-10-30 21:00:03 [WARNING] From D:\CSE 310 - Artificial Intelligence and Machine Learning\Spotify Recommendation Engine\.venv\lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2024-10-30 21:00:53 [WARNING] Compiled the loaded model, but the compiled metrics have yet to be built. `model.compile_metrics` will be empty until you train or evaluate the model.
+2024-10-30 21:00:53 [WARNING] Error in loading the saved optimizer state. As a result, your model is starting with a freshly initialized optimizer.
+2024-10-30 21:01:03 [WARNING] Compiled the loaded model, but the compiled metrics have yet to be built. `model.compile_metrics` will be empty until you train or evaluate the model.
+2024-10-30 21:01:03 [WARNING] Error in loading the saved optimizer state. As a result, your model is starting with a freshly initialized optimizer.
