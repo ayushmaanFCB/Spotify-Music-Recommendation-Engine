@@ -52,7 +52,7 @@ def app():
         sys.exit(1)
 
     st.markdown(
-        "<h1 style='text-align:center; color:#1cbc55'>SPOTIFY RECOMMENDATION ENGINE</h1>",
+        "<h1 style='text-align:center; color:#1cbc55'>COMPOSITE-AI DRIVEN MUSIC RECOMMENDATION ENGINE</h1>",
         unsafe_allow_html=True,
     )
 

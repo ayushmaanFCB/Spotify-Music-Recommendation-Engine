@@ -648,3 +648,7 @@ result = {'type': 'string', 'value': f'The top 5 popular songs by The Weeknd are
 2024-10-30 21:00:53 [WARNING] Error in loading the saved optimizer state. As a result, your model is starting with a freshly initialized optimizer.
 2024-10-30 21:01:03 [WARNING] Compiled the loaded model, but the compiled metrics have yet to be built. `model.compile_metrics` will be empty until you train or evaluate the model.
 2024-10-30 21:01:03 [WARNING] Error in loading the saved optimizer state. As a result, your model is starting with a freshly initialized optimizer.
+2024-11-10 19:17:33 [WARNING] From D:\CSE 310 - Artificial Intelligence and Machine Learning\Spotify Recommendation Engine\.venv\lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2024-11-11 16:18:38 [WARNING] From D:\CSE 310 - Artificial Intelligence and Machine Learning\Spotify Recommendation Engine\.venv\lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
